@@ -1,5 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<header class="">
-	<h3 class="p-2 font-weight-bold">Marondalgram</h3>
-</header>
+
+<div class="h-100 d-flex justify-content-between align-items-center">
+	<%-- logo --%>
+	<div>
+		<h1>MEMO 게시판</h1>
+	</div>
+	
+	<%-- 로그인 정보 --%>
+	<div>
+		<span>보람님 안녕하세요</span>
+		<a href="/user/sign-out">로그아웃</a>
+	</div>
+</div>
