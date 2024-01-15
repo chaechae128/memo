@@ -58,18 +58,18 @@
                 	
                 	//idCheckLength 가 충족x
                 	let loginId = $("#loginId").val().trim();
-                	if(loginId.length < 4 ){
+                	if(loginId.length < 1 ){
                 		$("#idCheckLength").removeClass("d-none");
                 		return; //submit이 아닌 click이벤트 이기 때문에 false 작성할 필요 x
-                	}
+                	}	
                 	
                 	// AJAX - 중복확인
                 	
                 	$.get("/user/is-duplicated-id", {"loginId":loginId}) //request
                 	.done(function(data){ //response
                 		if (data.code == 200) {
-                			if(data.is_duplicated_id == true){ //중복
-                				$("#idCheckLength").removeClass("d-none");
+                			if(data.is_duplicated_id){ //중복
+                				$("#idCheckDuplicated").removeClass("d-none");
                 			} else { //사용가능
                 				//$("#idCheckDuplicated").addClass("d-none");
                 				$("#idCheckOk").removeClass("d-none");
