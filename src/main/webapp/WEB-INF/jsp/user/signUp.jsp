@@ -58,7 +58,7 @@
                 	
                 	//idCheckLength 가 충족x
                 	let loginId = $("#loginId").val().trim();
-                	if(loginId.length < 1 ){
+                	if(loginId.length < 4 ){
                 		$("#idCheckLength").removeClass("d-none");
                 		return; //submit이 아닌 click이벤트 이기 때문에 false 작성할 필요 x
                 	}	
@@ -149,7 +149,7 @@
                     //alert("회원가입 완료");
 
                     // 1) 서버 전송 방식: sumbit을 js에서 동작시킴
-                    $(this)[0].submit();  //0번째 form 이다   // 화면이동이 된다.
+                    //$(this)[0].submit();  //0번째 form 이다   // 화면이동이 된다.
                     
                     // 2) AJAX: 화면 이동 되지 않음(콜백함수에서 이동) 응답값 JSON
                     let url = $(this).attr("action") // form 태그의 action값을 가져온다.
