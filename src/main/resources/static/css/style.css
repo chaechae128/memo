@@ -1,11 +1,11 @@
 @charset "UTF-8";
 header{
     height: 100px;
-    background-color: #CCC;
+    background-color: yellowGreen;
 }
 footer{
     height: 50px;
-    background-color: #CCC;
+    background-color: yellowGreen;
 }
 .contents{
     min-height: 500px;

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.memo.post.domain.Post;
 
@@ -15,4 +16,11 @@ public interface PostMapper {
 	
 	//input: userId output:List<Post>
 	public List<Post> getPostListByUserId(int userId);
+	
+	public void insertPost(
+			@Param("userId")int userId,
+			@Param("userLoginId") String userLoginId,
+			@Param("subject")String subject, 
+			@Param("content")String content, 
+			@Param("imagePath")String imagePath);
 }
