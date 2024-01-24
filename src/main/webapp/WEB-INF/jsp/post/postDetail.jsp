@@ -20,10 +20,10 @@
 		</div>
 		
 		<div class="d-flex justify-content-between">
-			<button type="button" id="deleteBtn"class="btn btn-secondary">삭제</button>
+			<button type="button" id="deleteBtn"class="btn btn-secondary" data-post-id="${post.id}">삭제</button>
 			<div>
 				<a  href="/post/post-list-view" class="btn btn-dark">목록</a>
-				<button type="button" id="saveBtn"class="btn btn-info">수정</button>
+				<button type="button" id="saveBtn"class="btn btn-info" data-post-id="${post.id}">수정</button>
 			</div>
 		</div>
 	</div>
@@ -46,13 +46,14 @@
 			
 		});//clearBtn
 		
-		//저장 버튼 클릭 -> post insert
+		//수정 버튼 클릭 -> post insert
 		$("#saveBtn").on('click', function(){
 			//alert("saveBtn");
+			let postId = $(this).data("post-id");
 			let subject = $("#subject").val().trim();
 			let content = $("#content").val();
 			let fileName = $("#file").val();//C:\fakepath\Microsoft_logo.svg.png
-			//alert(fileName);
+			//alert(postId);
 			
 			//validation
 			if(!subject) {
@@ -79,44 +80,67 @@
 				}
 			}
 			
-			// form 태그를 js에서 만든다.
-			// 이미지를 업로드 할 때에는 반드시 form 태그가 있어야한다.
+			// 이미지를 업로드 할 때는 반드시 form 태그로 구성한다.
 			let formData = new FormData();
-			formData.append("subject", subject);//form 태그 안쪽에 내용을 만든다 key는 name속성과 같다. Request Parameter명
-			formData.append("content", content); 
-			formData.append("file", $("#file")[0].files[0]); //파일 여러개 올릴 때는 multi로 바꿔야함
+			formData.append("postId", postId);
+			formData.append("subject", subject);
+			formData.append("content", content);
+			formData.append("file", $("#file")[0].files[0]); //꺼냈는데 없으면null
 			
-			//나중에 이미지 파일도 추가
-			
-			//AJAX
 			$.ajax({
 				//request
-				type: "POST"
-				,url: "/post/create"
-				,data: formData // form을 통째로 보냄
-				,enctype:"multipart/form-data" //파일 업로드를 위한 필수 설정  * 특히 이미지 있을 떄 반드시 필요
-				,processData:false //파일 업로드를 위한 필수 설정
-				,contentType:false //파일 업로드를 위한 필수 설정  dataparameter를 보낼 떄 원랜 String 으로 보내는데 난 객체로 보내겠다.
-				//form 태그를 만들고 하면 form 에 enctype속성 추가해야됨
+				type:"PUT"
+				,url:"/post/update"
+				,data:formData //String Type아님
+				,enctype:"multipart/form-data" //파일 업로드를 위함 필수 설정
+				,processData:false	//내가 보내는 파라미터는 스트링이 아니다! 파일 업로드를 위함 필수 설정
+				,contentType:false  //파일 업로드를 위함 필수 설정
 				
 				//response
 				,success:function(data){
-					if(data.code == 200){//성공시
-						alert("메모가 저장되었습니다.");
-						location.href="/post/post-list-view";
-					}
-					else {
+					if(data.code == 200){
+						alert("메모가 수정되었습니다.")
+						location.reload(true);
+					} else {
 						alert(data.error_message);
 					}
 				}
 				,error:function(request, status, error){
-					alert("글을 저장하는데 실패했습니다.");
+					alert("글을 수정하는데 실패했습니다.");
 				}
-				
-			});//ajax
-			
-			
-			
+			});
 		});//saveBtn
+		$("#deleteBtn").on('click', function(){
+			//alert("deleteBtn");
+			let postId = $(this).data("post-id");
+			//alert(postId);
+			
+			let fileName = $("#file").val();
+			let formData = new FormData();
+			formData.append("postId", postId);
+			formData.append("file", $("#file")[0].files[0]);
+			
+			$.ajax({
+				type:"DELETE"
+				,url:"/post/delete"
+				,data:formData
+				,enctype:"multipart/form-data"
+				,processData:false
+				,contentType:false
+				
+				,success:function(data){
+					if(data.code == 200){
+						alert("메모가 삭제되었습니다");
+						location.href="/post/post-list-view";
+					}else {
+						alert(data.error_message);
+					}
+				}
+				,error:function(request, status, error){
+					alert("글을 삭제하는데 실패했습니다.");
+				}
+			});//ajax
+		});//deleteBtn
+		
 	});
 </script>
