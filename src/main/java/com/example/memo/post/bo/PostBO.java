@@ -77,14 +77,24 @@ public class PostBO {
 		
 	}
 	
-	//input: postId, imagePath, output:x
-	public void deletePostByPostId(String userLoginId, int postId, MultipartFile file) {
-		//db에서 post 삭제
-		postMapper.deletePostByPostId(postId);
-		//이미지 파일 삭제
-		if(file != null) {
-			String imagePath = fileManagerService.saveFile(userLoginId, file);
-			fileManagerService.deleteFile(imagePath);
+	//input: postId, userId output:x
+	public void deletePostByPostIdUserId(int userId, int postId) {
+		// 기존 글이 있는지 확인(삭제할 대상이 있는가, 이미지가 있는가)
+		Post post = postMapper.selectPostByPostIdUserId(postId, userId);
+		if(post == null) {
+			log.info("[글 삭제] post is null. postId:{}, userId:{}", postId, userId);
+			return;
 		}
+		
+		//db에서 post 삭제
+		int deleteRowCount = postMapper.deletePostByPostId(postId);
+
+		//이미지가 존재하면 삭제(DB 삭제도 성공 했을 시만)
+		if(deleteRowCount > 0 && post.getImagePath() != null) {
+			fileManagerService.deleteFile(post.getImagePath());
+		}
+
+		
+		
 	}
 }

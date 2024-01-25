@@ -114,20 +114,10 @@
 			//alert("deleteBtn");
 			let postId = $(this).data("post-id");
 			//alert(postId);
-			
-			let fileName = $("#file").val();
-			let formData = new FormData();
-			formData.append("postId", postId);
-			formData.append("file", $("#file")[0].files[0]);
-			
 			$.ajax({
 				type:"DELETE"
 				,url:"/post/delete"
-				,data:formData
-				,enctype:"multipart/form-data"
-				,processData:false
-				,contentType:false
-				
+				,data:{"postId":postId}				
 				,success:function(data){
 					if(data.code == 200){
 						alert("메모가 삭제되었습니다");

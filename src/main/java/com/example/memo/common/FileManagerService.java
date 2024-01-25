@@ -19,10 +19,10 @@ public class FileManagerService {
 	//실제 업로드 된 이미지가 저장될 경로(서버의 주소)
 	
 	//학원용//***imagese뒤에 /꼭 붙이기
-	//public static final String FILE_UPLOAD_PATH = "D:\\kimchaeyeon\\6_spring_project\\MEMO\\memo_workspace\\images/"; //상수  
+	public static final String FILE_UPLOAD_PATH = "D:\\kimchaeyeon\\6_spring_project\\MEMO\\memo_workspace\\images/"; //상수  
 	
 	//집용
-	public static final String FILE_UPLOAD_PATH = "C:\\Users\\mouse\\OneDrive\\바탕 화면\\mega_백엔드\\spring_project_noetebook\\memo\\workspace\\images/"; //상수  
+	//public static final String FILE_UPLOAD_PATH = "C:\\Users\\mouse\\OneDrive\\바탕 화면\\mega_백엔드\\spring_project_noetebook\\memo\\workspace\\images/"; //상수  
 	
 	//input:File(원본)multipart, userLoginId(폴더명)	output: 이미지 경로
 	public String saveFile(String loginId, MultipartFile file) {
