@@ -1,5 +1,6 @@
 package com.example.memo.post.bo;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -25,10 +26,49 @@ public class PostBO {
 	@Autowired
 	private FileManagerService fileManagerService;
 	
+	//페이징 필드
+	private static final int POST_MAX_SIZE = 3;
+	
 	//input: userId(로그인된 사람) output:List<post>
-	public List<Post> selectPostListByUserId(int userId){
-		return postMapper.getPostListByUserId(userId);
+	public List<Post> selectPostListByUserId(int userId, Integer prevId, Integer nextId){
+		// 게시글 번호  10 9 8 | 7 6 5 | 4 3 2 | 1  
+		// 만약 4 3 2 페이지에 있을 때
+		// 1) 다음 :  2보다 작은 3개를 DESC 정렬
+		// 2) 이전 :  4보다 큰 3개를 ASC(5 6 7) => List reverse 해서 7 6 5 로 변경해야함
+		// 3) 페이징 정보 없음 : 최신순 3개 DESC 정렬 <- prevId, nextId null 일 때
+		
+		Integer standardId = null; // 기준이 되는 postId
+		String direction = null;  //방향(다음? 이전? x)
+		if (prevId != null) { // 2)이전
+			standardId = prevId;
+			direction = "prev";
+			
+			List<Post> postList = postMapper.getPostListByUserId(userId, standardId, direction, POST_MAX_SIZE);
+			
+			//reverse list 5 6 7 => 7 6 5
+			Collections.reverse(postList); //두집고 저장까지 해줌
+			
+			return postList;
+		} else if (nextId != null) { // 1)다음
+			standardId = nextId;
+			direction = "next";
+		} 
+		
+		//3)페이징 정보 없음, 1)
+		
+		return postMapper.getPostListByUserId(userId, standardId, direction,  POST_MAX_SIZE);
 	}
+	
+	//이전 페이지의 마지막인가?
+	public boolean isPrevLastPageByUserId(int userId, int prevId) {
+		int postId = postMapper.selectPostIdByUserIdSort(userId, "DESC");
+		return postId == prevId; //같으면 마지막이다.
+	}
+	public boolean isNextLastPageByUserId(int userId, int nextId) {
+		int postId = postMapper.selectPostIdByUserIdSort(userId, "ASC");
+		return postId == nextId; //같으면 마지막이다.
+	}
+	
 	
 	//input: params  output:x
 	public void addPost(int userId, String userLoginId, String subject, String content, MultipartFile file) {
